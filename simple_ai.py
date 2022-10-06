@@ -6,6 +6,8 @@ import cv2
 # Load the model
 model = load_model('keras_model.h5')
 
+
+
 cam = cv2.VideoCapture(0)
 def image_capture():
 	ret, frame = cam.read()
