@@ -23,7 +23,6 @@ def processData(data):
     
 def readSerial():
     bytesToRead = ser.inWaiting()
-    print(bytesToRead)
     if (bytesToRead > 0):
         global mess
         mess = mess + ser.read(bytesToRead).decode("UTF-8")
@@ -32,10 +31,8 @@ def readSerial():
             end = mess.find("#")
             processData(mess[start:end + 1])
             if (end == len(mess)):
-                print('Here1')
                 mess = ""
             else:
-                print('Here2')
                 mess = mess[end+1:]
 
 portName = getPort()
@@ -46,6 +43,5 @@ else:
     raise Exception('Port None')
 
 while True:
-    print(ser)
     readSerial()
     time.sleep(1)

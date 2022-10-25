@@ -7,15 +7,15 @@ AIO_FEED_ID = ["nutnhan1", "nutnhan2","cambien2"]
 AIO_USERNAME = "CaptainCuong"
 AIO_KEY = "aio_tXuw34H6aXBwGkrmOP57OI8IbO9i"
 
-def connected(client):
+def connected(self):
     print("Ket noi thanh cong ...")
     for feed_id in AIO_FEED_ID:
         client.subscribe(feed_id)
 
-def subscribe(client , userdata , mid , granted_qos):
+def subscribe(self , userdata , mid , granted_qos):
     print("Subscribe thanh cong ...")
 
-def disconnected(client):
+def disconnected(self):
     print("Ngat ket noi ...")
     sys.exit (1)
 
