@@ -18,7 +18,7 @@ def disconnected(self):
     print("Ngat ket noi ...")
     sys.exit (1)
 
-def message(client , feed_id , payload):
+def message(self, feed_id , payload):
     print("Data is from: " + feed_id + ", Payload: " +payload)
 
 client = MQTTClient(ADAFRUIT_IO_USERNAME , ADAFRUIT_IO_KEY)
