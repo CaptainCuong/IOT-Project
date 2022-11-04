@@ -1,14 +1,40 @@
-from uart.utils import *
-from ada.utils import *
+import serial.tools.list_ports
+from task.task import *
 
+counter_ai = 3
+counter_publish = 2
+counter_sensor = 2
+counter_anhsang = 7
+counter_uart = 8
+i = 0
 while True:
-	uart_mess = readSerial()
-	if uart_mess:
-		print('Message from UART:')
-		print(uart_mess)
-		print('-'*50)
-		for i in range(0, len(uart_mess), 2):
-			if uart_mess[i] in ['cambien1','cambien2','cambien3']:
-				client.publish(uart_mess[i], uart_mess[i+1])
+	# Cam bien
+	i = (i+1)%3
+	if counter_publish == 0: 
+		publish_randint(f'cambien{i+1}')
+		counter_publish = 5
+	
+	# AI
+	if counter_ai == 0:
+		publish_AI()
+		counter_ai = 5
+
+	# Nhiet do,  do am, anh sang
+	if counter_anhsang == 0:
+		publish_light_hum_temp()
+		counter_anhsang = 7
+	
+	# UART 2 ways
+	if counter_uart == 0:
+		publish_uart()
+		counter_uart = 8
+
+	# Decrease counter
+	counter_ai -= 1
+	counter_publish -= 1
+	counter_anhsang -= 1
+	counter_sensor -= 1
+	counter_uart -= 1
+	time.sleep(1)
 
 	

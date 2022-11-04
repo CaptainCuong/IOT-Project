@@ -34,7 +34,7 @@ def uart_write(data):
     ser.write((str(data.replace(' ',':')) + "#").encode())
     return
 
-portName = 'COM4'
+portName = 'COM7'
 
 if portName != 'None':
     ser = serial.Serial(port=portName, baudrate=115200)

@@ -5,7 +5,7 @@ import time
 import random
 from uart.utils import *
 ADAFRUIT_IO_USERNAME = "CaptainCuong"
-ADAFRUIT_IO_KEY = "aio_tXuw34H6aXBwGkrmOP57OI8IbO9i"
+ADAFRUIT_IO_KEY = "aio_hlvT24l32trvxlarXgqjrtlI2sMw"
 AIO_FEED_ID = ["cambien1", "cambien2", "cambien3"]
 SENSORS = ['cambien1','cambien2','cambien3']
 
