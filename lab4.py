@@ -5,7 +5,8 @@ counter_ai = 3
 counter_publish = 2
 counter_sensor = 2
 counter_anhsang = 7
-counter_uart = 8
+counter_uart = 3
+counter_press = 5
 i = 0
 while True:
 	# Cam bien
@@ -27,7 +28,12 @@ while True:
 	# UART 2 ways
 	if counter_uart == 0:
 		publish_uart()
-		counter_uart = 8
+		counter_uart = 3
+
+	# Press Button
+	# if counter_press == 0:
+	# 	update_press()
+	# 	counter_press = 5
 
 	# Decrease counter
 	counter_ai -= 1
@@ -35,6 +41,7 @@ while True:
 	counter_anhsang -= 1
 	counter_sensor -= 1
 	counter_uart -= 1
+	counter_press -= 1
 	time.sleep(1)
 
 	

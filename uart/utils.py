@@ -32,9 +32,8 @@ def readSerial():
 
 def uart_write(data):
     ser.write((str(data.replace(' ',':')) + "#").encode())
-    return
 
-portName = 'COM7'
+portName = 'COM4'
 
 if portName != 'None':
     ser = serial.Serial(port=portName, baudrate=115200)
