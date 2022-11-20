@@ -29,5 +29,6 @@ def publish_uart():
 		print(uart_mess)
 		print('-'*50)
 		for i in range(0, len(uart_mess), 2):
-			if uart_mess[i] in ('nhiet_do', 'anh_sang', 'cambien1', 'cambien2', 'cambien3'):
+			if uart_mess[i] in ('nhiet_do', 'anh_sang', 'cambien1', 'cambien2', 
+								'cambien3', 'received_mess', 'nutnhan1', 'nutnhan2'):
 				client.publish(uart_mess[i], uart_mess[i+1])
