@@ -16,8 +16,25 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Locale;
+
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.view.Menu;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    private TextView txtSpeechInput;
+    private ImageButton btnSpeak;
+    private final int REQ_CODE_SPEECH_INPUT = 100;
 
     MQTTHelper mqttHelper;
     TextView txtTemp,txtHumi,txtLight,txtMoisture;
@@ -26,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        txtSpeechInput = findViewById(R.id.txtSpeechInput);
+        btnSpeak = findViewById(R.id.btnSpeak);
         txtTemp = findViewById(R.id.txtTemperature);
         txtHumi = findViewById(R.id.txtHumidity);
         txtMoisture = findViewById(R.id.txtMoisture);
@@ -55,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        btnSpeak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promptSpeechInput();
+            }
+        });
         btnAI.setOnToggledListener(new OnToggledListener() {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
@@ -66,6 +90,54 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         startMQTT();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    txtSpeechInput.setText(result.get(0));
+                    if (result.get(0).contains("lights on")){
+                        sendDataMQTT("CaptainCuong/feeds/nutnhan1", "1");
+                        btnLED.setOn(true);
+                    }
+                    if (result.get(0).contains("lights off")){
+                        sendDataMQTT("CaptainCuong/feeds/nutnhan1", "0");
+                        btnLED.setOn(false);
+                    }
+                    if (result.get(0).contains("pump on")){
+                        sendDataMQTT("CaptainCuong/feeds/nutnhan2", "1");
+                        btnPUMP.setOn(true);
+                    }
+                    if (result.get(0).contains("pump off")){
+                        sendDataMQTT("CaptainCuong/feeds/nutnhan2", "0");
+                        btnPUMP.setOn(false);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.speech_prompt));
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.speech_not_supported),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void sendDataMQTT(String topic, String value){

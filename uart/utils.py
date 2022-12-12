@@ -21,19 +21,22 @@ def processData(data):
 
 def readSerial():
     bytesToRead = ser.inWaiting()
-    mess = ''
+    ret_mess = []
     if (bytesToRead > 0):
         mess = ser.read(bytesToRead).decode("UTF-8")
+        print(mess)
         while ("#" in mess) and ("!" in mess):
             start = mess.find("!")
             end = mess.find("#")
-            mess = processData(mess[start:end + 1])
-    return mess
+            ret_mess.append(processData(mess[start:end + 1]))
+            mess = mess[end+1:]
+            
+    return ret_mess
 
 def uart_write(data):
     ser.write((str(data.replace(' ',':')) + "#").encode())
 
-portName = 'COM4'
+portName = getPort()
 
 if portName != 'None':
     ser = serial.Serial(port=portName, baudrate=115200)
